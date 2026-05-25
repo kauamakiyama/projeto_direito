@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JurisView — Entenda seu processo</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --primary: #1a3a5c;
+      --primary-light: #2c5a85;
+      --accent: #2d7a4f;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --text: #1a1a1a;
+      --muted: #5b6470;
+      --border: #e5e7eb;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+
+    /* Header */
+    .brand { text-align: center; margin-bottom: 40px; }
+    .brand h1 {
+      font-size: 2.4rem; margin: 0; color: var(--primary);
+      letter-spacing: -0.02em; font-weight: 700;
+    }
+    .brand p { margin: 8px 0 0; color: var(--muted); font-size: 1.05rem; }
+
+    /* Search card */
+    .search-card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 32px; box-shadow: var(--shadow); margin-bottom: 24px;
+    }
+    .search-card label {
+      display: block; font-weight: 600; margin-bottom: 10px; color: var(--primary);
+    }
+    .search-row { display: flex; gap: 12px; }
+    input[type="text"] {
+      flex: 1; padding: 14px 16px; font-size: 1rem;
+      border: 2px solid var(--border); border-radius: 10px;
+      font-family: monospace; transition: border-color .15s;
+    }
+    input[type="text"]:focus { outline: none; border-color: var(--primary); }
+    button {
+      padding: 14px 24px; font-size: 1rem; font-weight: 600;
+      background: var(--primary); color: white; border: none;
+      border-radius: 10px; cursor: pointer; transition: background .15s;
+    }
+    button:hover { background: var(--primary-light); }
+    button:disabled { opacity: .6; cursor: wait; }
+    .helper {
+      margin-top: 16px; font-size: .9rem; color: var(--muted);
+    }
+    .badge-info {
+      display: inline-block; margin-top: 12px;
+      padding: 6px 12px; background: #eef2f6; color: var(--primary);
+      border-radius: 999px; font-size: .8rem; font-weight: 500;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center; padding: 48px 20px;
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .spinner {
+      width: 48px; height: 48px; margin: 0 auto 20px;
+      border: 4px solid var(--border); border-top-color: var(--primary);
+      border-radius: 50%; animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Error */
+    .error-box {
+      background: #fef2f2; border-left: 4px solid var(--danger);
+      padding: 16px 20px; border-radius: var(--radius); color: var(--danger);
+      margin-bottom: 20px;
+    }
+
+    /* Result */
+    .result { animation: fadeIn .4s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+
+    .header-proc {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white; padding: 28px; border-radius: var(--radius);
+      margin-bottom: 20px; box-shadow: var(--shadow);
+    }
+    .header-proc .num { font-family: monospace; font-size: 1.3rem; font-weight: 700; }
+    .header-proc .meta {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 14px; margin-top: 18px; font-size: .9rem;
+    }
+    .header-proc .meta div span {
+      display:block; opacity:.75; font-size:.75rem; text-transform:uppercase;
+      letter-spacing: .04em; margin-bottom: 2px;
+    }
+
+    /* Progress bar */
+    .phases {
+      background: var(--surface); padding: 24px; border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 20px;
+    }
+    .phases h3 { margin: 0 0 18px; color: var(--primary); }
+    .phase-track {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+      position: relative;
+    }
+    .phase-step {
+      text-align: center; font-size: .75rem; color: var(--muted);
+    }
+    .phase-step .dot {
+      width: 100%; height: 8px; background: var(--border);
+      border-radius: 4px; margin-bottom: 8px;
+    }
+    .phase-step.active .dot { background: var(--accent); }
+    .phase-step.active { color: var(--primary); font-weight: 600; }
+
+    /* Cards grid */
+    .grid-2 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 16px; margin-bottom: 20px;
+    }
+    .metric {
+      background: var(--surface); padding: 20px; border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .metric .label {
+      font-size: .8rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: .04em; margin-bottom: 6px;
+    }
+    .metric .value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .metric .sub { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+
+    .badge {
+      display: inline-block; padding: 4px 10px; border-radius: 999px;
+      font-size: .8rem; font-weight: 600;
+    }
+    .badge-success { background: #ecfdf5; color: var(--accent); }
+    .badge-warn { background: #fef3c7; color: var(--warn); }
+    .badge-danger { background: #fee2e2; color: var(--danger); }
+    .badge-neutral { background: #f1f5f9; color: var(--muted); }
+
+    /* Sections */
+    .section {
+      background: var(--surface); padding: 24px; border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 20px;
+    }
+    .section h2 {
+      margin: 0 0 16px; color: var(--primary); font-size: 1.2rem;
+      border-bottom: 2px solid var(--border); padding-bottom: 8px;
+    }
+
+    /* Movimentos */
+    .mov {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .mov:last-child { border-bottom: none; }
+    .mov-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 6px; flex-wrap: wrap; gap: 8px;
+    }
+    .mov-date { font-size: .85rem; color: var(--muted); font-weight: 500; }
+    .mov-trad { font-size: 1rem; color: var(--text); margin: 4px 0 6px; }
+    .mov-orig {
+      font-size: .85rem; color: var(--muted); font-style: italic;
+      background: #f8f9fa; padding: 8px 12px; border-radius: 6px;
+      border-left: 3px solid var(--border);
+    }
+
+    /* Lists */
+    ul.clean { list-style: none; padding: 0; margin: 0; }
+    ul.clean li {
+      padding: 8px 0 8px 28px; position: relative;
+    }
+    ul.clean li.pos::before {
+      content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700;
+    }
+    ul.clean li.neg::before {
+      content: "✗"; position: absolute; left: 0; color: var(--danger); font-weight: 700;
+    }
+    ul.clean li.num { counter-increment: step; }
+    ol.steps { padding-left: 24px; }
+    ol.steps li { padding: 6px 0; }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: #fffbeb; border-left: 4px solid var(--warn);
+      padding: 14px 18px; border-radius: 8px; color: #78350f;
+      font-size: .9rem; margin-top: 16px;
+    }
+
+    /* Exito bar */
+    .exito-bar {
+      height: 12px; background: var(--border); border-radius: 6px;
+      overflow: hidden; margin: 8px 0 12px;
+    }
+    .exito-bar > div {
+      height: 100%; background: linear-gradient(90deg, var(--accent), #4caf7c);
+      transition: width .6s;
+    }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    table td { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    table td:first-child { color: var(--muted); width: 40%; }
+
+    /* Footer */
+    .footer-actions {
+      text-align: center; margin-top: 28px; color: var(--muted); font-size: .85rem;
+    }
+    .footer-actions button { background: var(--accent); }
+    .footer-actions button:hover { background: #246b41; }
+    .footer-actions p { margin: 14px auto 0; max-width: 700px; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">
+      <h1>JurisView</h1>
+      <p>Entenda seu processo em linguagem simples</p>
+    </div>
+
+    <!-- TELA 1: BUSCA -->
+    <div id="tela-busca" class="search-card">
+      <label for="numero">Número do processo (CNJ)</label>
+      <div class="search-row">
+        <input id="numero" type="text" placeholder="Ex: 0001234-12.2024.8.26.0100" />
+        <button id="btn-consultar" onclick="consultarProcesso()">Consultar processo</button>
+      </div>
+      <p class="helper">
+        Seu processo no Juizado Especial Cível, explicado sem juridiquês.
+      </p>
+      <span class="badge-info">Dados consultados na base oficial do CNJ (DataJud)</span>
+    </div>
+
+    <!-- TELA 2: LOADING -->
+    <div id="tela-loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p id="loading-text">Consultando base do CNJ...</p>
+    </div>
+
+    <!-- TELA 3: ERRO -->
+    <div id="tela-erro" class="error-box hidden"></div>
+
+    <!-- TELA 4: RESULTADO -->
+    <div id="tela-resultado" class="result hidden"></div>
+  </div>
+
+<script>
+const API_URL = "http://localhost:5000/analisar";
+
+const FASES = ["Distribuição","Citação","Conciliação","Instrução","Sentença","Encerrado"];
+
+const LOADING_TEXTS = [
+  "Consultando base do CNJ...",
+  "Analisando movimentações...",
+  "Preparando seu relatório...",
+];
+
+let loadingInterval = null;
+
+document.getElementById("numero").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") consultarProcesso();
+});
+
+function mostrarLoading() {
+  document.getElementById("tela-busca").classList.add("hidden");
+  document.getElementById("tela-erro").classList.add("hidden");
+  document.getElementById("tela-resultado").classList.add("hidden");
+  document.getElementById("tela-loading").classList.remove("hidden");
+  let i = 0;
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % LOADING_TEXTS.length;
+    document.getElementById("loading-text").textContent = LOADING_TEXTS[i];
+  }, 1800);
+}
+function esconderLoading() {
+  document.getElementById("tela-loading").classList.add("hidden");
+  if (loadingInterval) clearInterval(loadingInterval);
+}
+function mostrarErro(msg) {
+  esconderLoading();
+  document.getElementById("tela-busca").classList.remove("hidden");
+  const box = document.getElementById("tela-erro");
+  box.textContent = msg;
+  box.classList.remove("hidden");
+}
+
+async function consultarProcesso() {
+  const num = document.getElementById("numero").value.trim();
+  if (!num) { mostrarErro("Informe o número do processo."); return; }
+
+  mostrarLoading();
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({numero_processo: num}),
+    });
+    const data = await r.json();
+    if (!r.ok) { mostrarErro(data.erro || "Erro desconhecido."); return; }
+    esconderLoading();
+    renderizarResultado(data);
+  } catch (e) {
+    mostrarErro("Não foi possível conectar ao servidor. O backend está rodando em localhost:5000?");
+  }
+}
+
+function calcularProgressoFase(nomeFase) {
+  if (!nomeFase) return 0;
+  const n = nomeFase.toLowerCase();
+  if (n.includes("encerr") || n.includes("trânsito")) return 6;
+  if (n.includes("senten") || n.includes("recurso")) return 5;
+  if (n.includes("instru") || n.includes("audiência")) return 4;
+  if (n.includes("concili")) return 3;
+  if (n.includes("citaç")) return 2;
+  return 1;
+}
+
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function extrairPercentual(texto) {
+  if (!texto) return 50;
+  const m = String(texto).match(/(\d{1,3})\s*%/g);
+  if (!m) return 50;
+  const nums = m.map(x => parseInt(x));
+  return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+}
+
+function badgeExito(t) {
+  const p = extrairPercentual(t);
+  if (p >= 70) return "badge-success";
+  if (p >= 50) return "badge-warn";
+  return "badge-danger";
+}
+
+function renderizarResultado(d) {
+  const p = d.processo;
+  const a = d.analise;
+  const movs = (a.traducao_movimentos || []).slice(0, 8);
+  const faseIdx = calcularProgressoFase(a.fase_atual?.nome);
+
+  const html = `
+    <div class="header-proc">
+      <div class="num">${escapeHtml(p.numero_processo)}</div>
+      <div class="meta">
+        <div><span>Tribunal</span>${escapeHtml(p.tribunal || "-")}</div>
+        <div><span>Órgão julgador</span>${escapeHtml(p.orgao_julgador || "-")}</div>
+        <div><span>Classe</span>${escapeHtml(p.classe || "-")}</div>
+        <div><span>Valor da causa</span>${escapeHtml(p.valor_causa)}</div>
+        <div><span>Ajuizado em</span>${escapeHtml(p.data_ajuizamento)}</div>
+        <div><span>Grau</span>${escapeHtml(p.grau || "-")}</div>
+      </div>
+    </div>
+
+    <div class="phases">
+      <h3>Onde seu processo está</h3>
+      <div class="phase-track">
+        ${FASES.map((f,i)=>`
+          <div class="phase-step ${i < faseIdx ? "active" : ""}">
+            <div class="dot"></div>${f}
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="metric">
+        <div class="label">Tempo decorrido</div>
+        <div class="value">${escapeHtml(a.estimativa_prazo?.tempo_decorrido || "-")}</div>
+        <div class="sub">Restante estimado: ${escapeHtml(a.estimativa_prazo?.estimativa_restante || "-")}</div>
+        ${a.estimativa_prazo?.comparativo ? `<div class="sub" style="margin-top:6px;font-style:italic;">${escapeHtml(a.estimativa_prazo.comparativo)}</div>` : ""}
+      </div>
+      <div class="metric">
+        <div class="label">Fase atual</div>
+        <div class="value">${escapeHtml(a.fase_atual?.icone || "")} ${escapeHtml(a.fase_atual?.nome || "-")}</div>
+        <div class="sub">${escapeHtml(a.fase_atual?.descricao || "")}</div>
+      </div>
+      <div class="metric">
+        <div class="label">Status do recurso</div>
+        <div class="value">
+          <span class="badge ${a.status_recurso?.em_recurso ? "badge-warn" : "badge-success"}">
+            ${a.status_recurso?.em_recurso ? "Em recurso" : "Sem recurso"}
+          </span>
+        </div>
+        <div class="sub">${escapeHtml(a.status_recurso?.descricao || "")}</div>
+      </div>
+      <div class="metric">
+        <div class="label">Estimativa de êxito</div>
+        <div class="value">
+          <span class="badge ${badgeExito(a.analise_juridica?.estimativa_exito)}">
+            ${escapeHtml(a.analise_juridica?.estimativa_exito || "-")}
+          </span>
+        </div>
+        <div class="sub">Valor estimado: ${escapeHtml(a.analise_juridica?.valor_estimado || "-")}</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Últimas movimentações (traduzidas)</h2>
+      ${movs.map(m => `
+        <div class="mov">
+          <div class="mov-head">
+            <span class="mov-date">${escapeHtml(m.data)}</span>
+            <span class="badge ${m.importancia==='alta'?'badge-danger':m.importancia==='media'?'badge-warn':'badge-neutral'}">
+              ${escapeHtml(m.importancia || "")}
+            </span>
+          </div>
+          <div class="mov-trad">${escapeHtml(m.traduzido)}</div>
+          <div class="mov-orig">${escapeHtml(m.original)}</div>
+        </div>
+      `).join("") || "<p>Sem movimentações disponíveis.</p>"}
+    </div>
+
+    <div class="section">
+      <h2>Análise jurídica</h2>
+      <div class="exito-bar"><div style="width:${extrairPercentual(a.analise_juridica?.estimativa_exito)}%"></div></div>
+      <p><strong>Fundamentos:</strong></p>
+      <ul class="clean">
+        ${(a.analise_juridica?.fundamentos || []).map(f => `<li class="pos">${escapeHtml(f)}</li>`).join("")}
+      </ul>
+      <p><strong>Fatores positivos:</strong></p>
+      <ul class="clean">
+        ${(a.analise_juridica?.fatores_positivos || []).map(f => `<li class="pos">${escapeHtml(f)}</li>`).join("")}
+      </ul>
+      <p><strong>Fatores negativos:</strong></p>
+      <ul class="clean">
+        ${(a.analise_juridica?.fatores_negativos || []).map(f => `<li class="neg">${escapeHtml(f)}</li>`).join("")}
+      </ul>
+      <div class="disclaimer">${escapeHtml(a.analise_juridica?.disclaimer || "")}</div>
+    </div>
+
+    <div class="section">
+      <h2>Custos</h2>
+      <table>
+        <tr><td>1ª instância</td><td>${escapeHtml(a.custos?.primeira_instancia || "-")}</td></tr>
+        <tr><td>Se houver recurso</td><td>${escapeHtml(a.custos?.se_houver_recurso || "-")}</td></tr>
+        <tr><td>Honorários</td><td>${escapeHtml(a.custos?.honorarios || "-")}</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Próximos passos esperados</h2>
+      <ol class="steps">
+        ${(a.proximos_passos || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+      </ol>
+    </div>
+
+    ${(a.alertas && a.alertas.length) ? `
+      <div class="section" style="border-left: 4px solid var(--warn);">
+        <h2 style="color: var(--warn); border-color: var(--warn);">Alertas importantes</h2>
+        <ul class="clean">
+          ${a.alertas.map(al => `<li class="neg">${escapeHtml(al)}</li>`).join("")}
+        </ul>
+      </div>
+    ` : ""}
+
+    <div class="footer-actions">
+      <button onclick="novaConsulta()">Nova consulta</button>
+      <p>Dados obtidos da base oficial do CNJ (DataJud). Última atualização: ${new Date().toLocaleDateString("pt-BR")}. A base pode ter defasagem de horas/dias.
+      Esta análise é informativa e <strong>não substitui a orientação de um advogado</strong>.</p>
+    </div>
+  `;
+
+  const tr = document.getElementById("tela-resultado");
+  tr.innerHTML = html;
+  tr.classList.remove("hidden");
+  document.getElementById("tela-busca").classList.add("hidden");
+  document.getElementById("tela-erro").classList.add("hidden");
+}
+
+function novaConsulta() {
+  document.getElementById("tela-resultado").classList.add("hidden");
+  document.getElementById("tela-busca").classList.remove("hidden");
+  document.getElementById("numero").value = "";
+  document.getElementById("numero").focus();
+}
+</script>
+</body>
+</html>
