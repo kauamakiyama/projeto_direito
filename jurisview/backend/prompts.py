@@ -27,7 +27,7 @@ def montar_prompt(dados_processo: dict, jurisprudencia: dict, tempo: dict) -> st
         "tribunal": dados_processo.get("tribunal"),
         "dataAjuizamento": dados_processo.get("dataAjuizamento"),
         "valorCausa": dados_processo.get("valorCausa"),
-        "movimentos_recentes": dados_processo.get("movimentos", [])[:15],
+        "movimentos_recentes": dados_processo.get("movimentos", [])[:8],
     }
 
     prompt = f"""Você é um assistente jurídico especializado em traduzir processos do Juizado Especial Cível (JEC) para cidadãos sem formação jurídica.

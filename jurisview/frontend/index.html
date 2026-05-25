@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JurisView — Entenda seu processo</title>
+  <title>Decisômetro — Entenda seu processo</title>
   <style>
     :root {
       --bg: #f8f9fa;
@@ -230,7 +230,7 @@
 <body>
   <div class="container">
     <div class="brand">
-      <h1>JurisView</h1>
+      <h1>Decisômetro</h1>
       <p>Entenda seu processo em linguagem simples</p>
     </div>
 
@@ -273,7 +273,30 @@ const LOADING_TEXTS = [
 
 let loadingInterval = null;
 
-document.getElementById("numero").addEventListener("keydown", (e) => {
+const inputNumero = document.getElementById("numero");
+
+function aplicarMascaraCNJ(valor) {
+  const d = valor.replace(/\D/g, "").slice(0, 20);
+  // NNNNNNN-DD.AAAA.J.TR.OOOO
+  if (d.length <= 7)  return d;
+  if (d.length <= 9)  return d.slice(0,7) + "-" + d.slice(7);
+  if (d.length <= 13) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9);
+  if (d.length <= 14) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13);
+  if (d.length <= 16) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13,14) + "." + d.slice(14);
+  return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13,14) + "." + d.slice(14,16) + "." + d.slice(16);
+}
+
+inputNumero.addEventListener("input", (e) => {
+  const pos = e.target.selectionStart;
+  const anterior = e.target.value;
+  const formatado = aplicarMascaraCNJ(anterior);
+  e.target.value = formatado;
+  // reposiciona o cursor considerando os separadores inseridos
+  const diff = formatado.length - anterior.length;
+  e.target.setSelectionRange(pos + diff, pos + diff);
+});
+
+inputNumero.addEventListener("keydown", (e) => {
   if (e.key === "Enter") consultarProcesso();
 });
 

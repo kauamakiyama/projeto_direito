@@ -1,4 +1,4 @@
-# JurisView
+# Decisômetro
 
 Plataforma que traduz processos do Juizado Especial Cível (JEC) para linguagem simples, com análise jurimétrica baseada em dados reais do CNJ.
 

@@ -1,5 +1,5 @@
 """
-JurisView — backend Flask.
+Decisômetro — backend Flask.
 Roda em http://localhost:5000.
 """
 
@@ -23,7 +23,7 @@ CORS(app)
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
 
-MODELO_CLAUDE = "claude-sonnet-4-20250514"
+MODELO_CLAUDE = "claude-sonnet-4-5"
 
 
 def _formatar_valor(v):
@@ -117,8 +117,8 @@ def analisar():
     try:
         resposta = client.messages.create(
             model=MODELO_CLAUDE,
-            max_tokens=4000,
-            timeout=30,
+            max_tokens=2048,
+            timeout=90,
             messages=[{"role": "user", "content": prompt_texto}],
         )
         conteudo = resposta.content[0].text
