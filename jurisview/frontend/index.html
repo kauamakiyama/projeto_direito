@@ -648,6 +648,44 @@
     .result-footer strong { color: var(--text-secondary); }
 
     .hidden { display: none !important; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 520px) {
+      .hero { padding: 36px 16px 80px; }
+      .brand-title { font-size: 1.7rem; }
+      .brand-sub { font-size: .88rem; }
+
+      .container { padding: 0 14px 60px; margin-top: -48px; }
+
+      .search-card { padding: 22px 18px; }
+      .search-row { flex-direction: column; }
+      .btn-primary { width: 100%; text-align: center; padding: 14px; }
+      input[type="text"] { font-size: .88rem; letter-spacing: .03em; }
+
+      .proc-header { padding: 22px 18px; }
+      .proc-num { font-size: .85rem; letter-spacing: .04em; }
+      .proc-meta { grid-template-columns: 1fr 1fr; gap: 14px; }
+
+      .phases-card { padding: 20px 14px 18px; }
+      .phase-dot { width: 26px; height: 26px; font-size: .6rem; }
+      .phase-label { font-size: .58rem; }
+      .phase-track::before { top: 13px; left: 13px; right: 13px; }
+      .phase-track::after  { top: 13px; left: 13px; }
+
+      .grid-metrics { grid-template-columns: 1fr; }
+
+      .section { padding: 20px 16px; }
+      .metric-card { padding: 18px; }
+      .metric-value { font-size: 1.3rem; }
+
+      .exito-wrap { padding: 18px; }
+      .exito-pct { font-size: 1.8rem; }
+      .exito-text { display: none; }
+
+      .analise-grid { grid-template-columns: 1fr; }
+
+      .proc-header-top { flex-direction: column; gap: 8px; }
+    }
   </style>
 </head>
 <body>
