@@ -700,7 +700,7 @@
   </div>
 
 <script>
-const API_URL = "http://localhost:5000/analisar";
+const API_URL = window.location.hostname === "localhost" ? "http://localhost:5000/analisar" : "/analisar";
 const FASES = ["Distribuição","Citação","Conciliação","Instrução","Sentença","Recurso","Encerrado"];
 const LOADING_TEXTS = ["Consultando base do CNJ","Analisando movimentações","Preparando seu relatório"];
 

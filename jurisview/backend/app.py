@@ -6,7 +6,7 @@ Roda em http://localhost:5000.
 import os
 import json
 import re
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 from anthropic import Anthropic
@@ -55,6 +55,11 @@ def _extrair_json(texto: str):
     if inicio != -1 and fim != -1:
         texto = texto[inicio:fim + 1]
     return json.loads(texto)
+
+
+@app.route("/")
+def index():
+    return send_from_directory("../frontend", "index.html")
 
 
 @app.route("/health", methods=["GET"])
@@ -151,4 +156,5 @@ def analisar():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
