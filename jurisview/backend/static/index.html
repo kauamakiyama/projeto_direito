@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Decisômetro — Entenda seu processo</title>
+  <style>
+    :root {
+      --bg:             #EDF2F7;
+      --surface:        #FFFFFF;
+      --primary:        #0D2137;
+      --primary-mid:    #1A3A5C;
+      --primary-light:  #2A5BA0;
+      --accent:         #15803D;
+      --accent-light:   #DCFCE7;
+      --warn:           #B45309;
+      --warn-light:     #FEF3C7;
+      --danger:         #DC2626;
+      --danger-light:   #FEE2E2;
+      --info:           #0369A1;
+      --info-light:     #DBEAFE;
+      --text:           #0F172A;
+      --text-secondary: #475569;
+      --muted:          #94A3B8;
+      --border:         #E2E8F0;
+      --border-subtle:  #F1F5F9;
+      --radius:         16px;
+      --radius-sm:      10px;
+      --shadow:         0 4px 12px rgba(13,33,55,.07), 0 1px 3px rgba(13,33,55,.04);
+      --shadow-md:      0 8px 24px rgba(13,33,55,.09), 0 4px 8px rgba(13,33,55,.05);
+      --shadow-lg:      0 20px 48px rgba(13,33,55,.13), 0 8px 16px rgba(13,33,55,.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #081828 0%, var(--primary) 45%, #163a60 100%);
+      padding: 52px 24px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-blob-1 {
+      width: 400px; height: 400px;
+      top: -120px; right: -100px;
+      background: radial-gradient(circle, rgba(42,91,160,.4) 0%, transparent 70%);
+    }
+    .hero-blob-2 {
+      width: 300px; height: 300px;
+      bottom: -140px; left: -60px;
+      background: radial-gradient(circle, rgba(21,128,61,.3) 0%, transparent 70%);
+    }
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .brand-icon {
+      width: 50px; height: 50px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .brand-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.05em;
+    }
+    .brand-sub {
+      color: rgba(255,255,255,.55);
+      font-size: .95rem;
+      margin-top: 6px;
+    }
+    .hero-divider {
+      width: 36px; height: 2px;
+      background: linear-gradient(90deg, rgba(255,255,255,.5), rgba(255,255,255,.1));
+      border-radius: 2px;
+      margin: 14px auto 0;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 960px;
+      margin: -56px auto 0;
+      padding: 0 24px 80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ── BUSCA ── */
+    .search-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid rgba(226,232,240,.6);
+      padding: 36px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 20px;
+    }
+    .search-card label {
+      display: block;
+      font-weight: 700;
+      font-size: .75rem;
+      color: var(--primary);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .search-row { display: flex; gap: 10px; }
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      letter-spacing: .06em;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(42,91,160,.1);
+      background: #fff;
+    }
+    .btn-primary {
+      padding: 14px 32px;
+      font-size: .95rem;
+      font-weight: 700;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background .15s, transform .1s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--primary-mid); box-shadow: 0 4px 16px rgba(13,33,55,.28); }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-primary:disabled { opacity: .5; cursor: wait; }
+    .btn-secondary {
+      padding: 12px 28px;
+      font-size: .9rem;
+      font-weight: 600;
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-secondary:hover { background: var(--border-subtle); border-color: var(--primary); }
+
+    .search-footer {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .search-footer p { font-size: .84rem; color: var(--muted); }
+    .tag-cnj {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--info-light);
+      color: var(--info);
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 700;
+    }
+    .tag-cnj::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--info);
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 72px 24px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .spinner-wrap { margin-bottom: 28px; }
+    .spinner {
+      width: 44px; height: 44px;
+      margin: 0 auto;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-eyebrow {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .loading p { color: var(--text); font-size: 1rem; font-weight: 600; }
+    .loading-dots::after {
+      content: "";
+      animation: dots 1.4s steps(3,end) infinite;
+    }
+    @keyframes dots { 0%{content:""} 33%{content:"."} 66%{content:".."} 100%{content:"..."} }
+
+    /* ── ERRO ── */
+    .error-box {
+      background: var(--danger-light);
+      border: 1px solid #FECACA;
+      border-left: 4px solid var(--danger);
+      padding: 18px 22px;
+      border-radius: var(--radius-sm);
+      color: #7F1D1D;
+      font-size: .9rem;
+      margin-bottom: 20px;
+    }
+
+    /* ── RESULTADO ── */
+    .result { display: flex; flex-direction: column; gap: 16px; }
+
+    .rs {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .rs.in { opacity: 1; transform: none; }
+
+    /* ── CABEÇALHO ── */
+    .proc-header {
+      background: linear-gradient(145deg, #0D2137 0%, #163558 55%, #1e4880 100%);
+      color: white;
+      padding: 36px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .proc-header::before {
+      content: "";
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+    }
+    .proc-header::after {
+      content: "";
+      position: absolute;
+      bottom: -70px; left: 38%;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,.03);
+      border-radius: 50%;
+    }
+    .proc-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .proc-num {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      opacity: .95;
+    }
+    .proc-badge-grau {
+      padding: 4px 14px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .proc-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      position: relative; z-index: 1;
+    }
+    .proc-meta-item span {
+      display: block;
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      opacity: .45;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .proc-meta-item strong {
+      font-size: .88rem;
+      font-weight: 600;
+      opacity: .95;
+      line-height: 1.3;
+    }
+
+    /* ── PROGRESSO ── */
+    .phases-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      box-shadow: var(--shadow);
+    }
+    .phases-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .phases-title {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+    }
+    .phases-badge {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .phase-track {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+    }
+    .phase-track::before {
+      content: "";
+      position: absolute;
+      top: 17px; left: 17px; right: 17px;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .phase-track::after {
+      content: "";
+      position: absolute;
+      top: 17px; left: 17px;
+      width: calc((100% - 34px) * var(--prog, 0));
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #4ADE80);
+      border-radius: 2px;
+      z-index: 0;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+    .phase-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .phase-dot {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all .4s cubic-bezier(.4,0,.2,1);
+    }
+    .phase-item.done .phase-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+    .phase-item.current .phase-dot {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 5px rgba(13,33,55,.12);
+    }
+    .phase-label {
+      font-size: .66rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+    }
+    .phase-item.done .phase-label    { color: var(--accent); }
+    .phase-item.current .phase-label { color: var(--primary); font-weight: 700; }
+
+    /* ── MÉTRICAS ── */
+    .grid-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 600px) { .grid-metrics { grid-template-columns: 1fr; } }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform .2s ease, box-shadow .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .mc-blue::before   { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+    .mc-info::before   { background: linear-gradient(90deg, var(--info), #38BDF8); }
+    .mc-warn::before   { background: linear-gradient(90deg, var(--warn), #F59E0B); }
+    .mc-green::before  { background: linear-gradient(90deg, var(--accent), #22C55E); }
+
+    .metric-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    .metric-icon svg { width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .mi-blue  { background: #EEF2FF; } .mi-blue  svg { stroke: var(--primary); }
+    .mi-info  { background: var(--info-light); } .mi-info  svg { stroke: var(--info); }
+    .mi-warn  { background: var(--warn-light); } .mi-warn  svg { stroke: var(--warn); }
+    .mi-green { background: var(--accent-light); } .mi-green svg { stroke: var(--accent); }
+
+    .metric-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: -.03em;
+    }
+    .metric-sub { font-size: .82rem; color: var(--text-secondary); line-height: 1.45; }
+    .metric-sub.it { font-style: italic; color: var(--muted); margin-top: 5px; font-size: .78rem; }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: .73rem;
+      font-weight: 700;
+    }
+    .badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; }
+    .badge-success { background: var(--accent-light); color: var(--accent); }
+    .badge-success::before { background: var(--accent); }
+    .badge-warn    { background: var(--warn-light);   color: var(--warn); }
+    .badge-warn::before    { background: var(--warn); }
+    .badge-danger  { background: var(--danger-light); color: var(--danger); }
+    .badge-danger::before  { background: var(--danger); }
+    .badge-info    { background: var(--info-light);   color: var(--info); }
+    .badge-info::before    { background: var(--info); }
+    .badge-neutral { background: var(--border-subtle); color: var(--text-secondary); }
+    .badge-neutral::before { background: var(--muted); }
+
+    /* ── SEÇÕES ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 24px;
+    }
+    .section-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-icon svg { width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -.01em;
+    }
+
+    /* ── MOVIMENTOS ── */
+    .timeline { display: flex; flex-direction: column; }
+    .mov-item {
+      display: flex;
+      gap: 18px;
+      padding-bottom: 22px;
+      position: relative;
+    }
+    .mov-item:last-child { padding-bottom: 0; }
+    .mov-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 22px; }
+    .mov-circle {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--border);
+      box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--border);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .mov-item.importancia-alta  .mov-circle { background: var(--primary); box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px rgba(13,33,55,.2); }
+    .mov-item.importancia-media .mov-circle { background: var(--warn);    box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px rgba(180,83,9,.2); }
+    .mov-item.importancia-baixa .mov-circle { background: var(--muted);   box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px rgba(148,163,184,.2); }
+    .mov-connector { width: 1px; flex: 1; background: var(--border); margin: 6px 0; min-height: 14px; }
+    .mov-item:last-child .mov-connector { display: none; }
+    .mov-content { flex: 1; }
+    .mov-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+    .mov-date { font-size: .74rem; font-weight: 700; color: var(--muted); letter-spacing: .02em; }
+    .mov-translated { font-size: .94rem; color: var(--text); font-weight: 500; margin-bottom: 8px; line-height: 1.5; }
+    .mov-original {
+      font-size: .79rem;
+      color: var(--muted);
+      background: var(--border-subtle);
+      border-left: 3px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* ── ANÁLISE ÊXITO ── */
+    .exito-wrap {
+      background: linear-gradient(135deg, var(--primary) 0%, #163558 100%);
+      border-radius: var(--radius-sm);
+      padding: 24px 28px;
+      margin-bottom: 22px;
+      color: white;
+    }
+    .exito-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .exito-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; opacity: .55; margin-bottom: 4px; }
+    .exito-pct { font-size: 2.4rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .exito-text { font-size: .88rem; opacity: .75; text-align: right; max-width: 200px; line-height: 1.4; }
+    .exito-bar { height: 7px; background: rgba(255,255,255,.18); border-radius: 999px; overflow: hidden; }
+    .exito-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ADE80, #86EFAC);
+      border-radius: 999px;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    .analise-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    @media (max-width: 580px) { .analise-grid { grid-template-columns: 1fr; } }
+    .analise-bloco { background: var(--border-subtle); border-radius: var(--radius-sm); padding: 18px; }
+    .analise-bloco-title { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+    .item-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .item-list li { display: flex; gap: 10px; font-size: .86rem; color: var(--text-secondary); line-height: 1.45; }
+    .item-list li .icon {
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem; font-weight: 800;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .icon-pos { background: var(--accent-light); color: var(--accent); }
+    .icon-neg { background: var(--danger-light); color: var(--danger); }
+    .icon-neu { background: var(--info-light);   color: var(--info); }
+
+    .disclaimer {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-left: 4px solid var(--warn);
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      color: #78350F;
+      font-size: .82rem;
+      line-height: 1.55;
+    }
+
+    /* ── CUSTOS ── */
+    .custos-table { width: 100%; border-collapse: collapse; }
+    .custos-table td { padding: 14px 0; border-bottom: 1px solid var(--border-subtle); font-size: .9rem; vertical-align: top; }
+    .custos-table tr:last-child td { border-bottom: none; }
+    .custos-table td:first-child { color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; width: 34%; padding-right: 16px; padding-top: 16px; }
+    .custos-table td:last-child { color: var(--text-secondary); }
+
+    /* ── PRÓXIMOS PASSOS ── */
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .steps-list li { display: flex; gap: 14px; align-items: flex-start; font-size: .9rem; color: var(--text-secondary); line-height: 1.5; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: white; font-size: .7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── ALERTAS ── */
+    .alertas-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .alertas-list li { display: flex; gap: 12px; align-items: flex-start; font-size: .87rem; color: #7C2D12; line-height: 1.5; background: #FFF7ED; border-radius: var(--radius-sm); padding: 14px 16px; border: 1px solid #FED7AA; }
+    .alerta-icon { width: 20px; height: 20px; border-radius: 50%; background: var(--warn-light); color: var(--warn); font-size: .65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── RODAPÉ ── */
+    .result-footer { text-align: center; padding: 12px 0; }
+    .result-footer p { margin-top: 16px; font-size: .8rem; color: var(--muted); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .result-footer strong { color: var(--text-secondary); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-inner">
+      <div class="brand-logo">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3L4 7v5c0 5 3.5 9.74 8 11 4.5-1.26 8-6 8-11V7L12 3z"/></svg>
+        </div>
+        <span class="brand-title">Decisômetro</span>
+      </div>
+      <p class="brand-sub">Entenda seu processo jurídico em linguagem simples</p>
+      <div class="hero-divider"></div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="container">
+
+    <!-- BUSCA -->
+    <div id="tela-busca" class="search-card">
+      <label for="numero">Número do processo (CNJ)</label>
+      <div class="search-row">
+        <input id="numero" type="text" placeholder="0000000-00.0000.0.00.0000" autocomplete="off" spellcheck="false" />
+        <button class="btn-primary" onclick="consultarProcesso()">Consultar</button>
+      </div>
+      <div class="search-footer">
+        <p>Processo do Juizado Especial Cível, explicado sem juridiquês.</p>
+        <span class="tag-cnj">Base oficial CNJ — DataJud</span>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="tela-loading" class="loading hidden">
+      <div class="spinner-wrap"><div class="spinner"></div></div>
+      <div class="loading-eyebrow">Aguarde</div>
+      <p><span id="loading-text">Consultando base do CNJ</span><span class="loading-dots"></span></p>
+    </div>
+
+    <!-- ERRO -->
+    <div id="tela-erro" class="error-box hidden"></div>
+
+    <!-- RESULTADO -->
+    <div id="tela-resultado" class="result hidden"></div>
+
+  </div>
+
+<script>
+const API_URL = window.location.hostname === "localhost" ? "http://localhost:5000/analisar" : "/analisar";
+const FASES = ["Distribuição","Citação","Conciliação","Instrução","Sentença","Recurso","Encerrado"];
+const LOADING_TEXTS = ["Consultando base do CNJ","Analisando movimentações","Preparando seu relatório"];
+
+let loadingInterval = null;
+const inputNumero = document.getElementById("numero");
+
+function aplicarMascaraCNJ(valor) {
+  const d = valor.replace(/\D/g, "").slice(0, 20);
+  if (d.length <= 7)  return d;
+  if (d.length <= 9)  return d.slice(0,7) + "-" + d.slice(7);
+  if (d.length <= 13) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9);
+  if (d.length <= 14) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13);
+  if (d.length <= 16) return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13,14) + "." + d.slice(14);
+  return d.slice(0,7) + "-" + d.slice(7,9) + "." + d.slice(9,13) + "." + d.slice(13,14) + "." + d.slice(14,16) + "." + d.slice(16);
+}
+
+inputNumero.addEventListener("input", e => {
+  const pos = e.target.selectionStart;
+  const ant = e.target.value;
+  const fmt = aplicarMascaraCNJ(ant);
+  e.target.value = fmt;
+  const diff = fmt.length - ant.length;
+  e.target.setSelectionRange(pos + diff, pos + diff);
+});
+inputNumero.addEventListener("keydown", e => { if (e.key === "Enter") consultarProcesso(); });
+
+function mostrarLoading() {
+  document.getElementById("tela-busca").classList.add("hidden");
+  document.getElementById("tela-erro").classList.add("hidden");
+  document.getElementById("tela-resultado").classList.add("hidden");
+  document.getElementById("tela-loading").classList.remove("hidden");
+  let i = 0;
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % LOADING_TEXTS.length;
+    document.getElementById("loading-text").textContent = LOADING_TEXTS[i];
+  }, 1800);
+}
+function esconderLoading() {
+  document.getElementById("tela-loading").classList.add("hidden");
+  if (loadingInterval) clearInterval(loadingInterval);
+}
+function mostrarErro(msg) {
+  esconderLoading();
+  document.getElementById("tela-busca").classList.remove("hidden");
+  const box = document.getElementById("tela-erro");
+  box.textContent = msg;
+  box.classList.remove("hidden");
+}
+
+async function consultarProcesso() {
+  const num = inputNumero.value.trim();
+  if (!num) { mostrarErro("Informe o número do processo."); return; }
+  mostrarLoading();
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({numero_processo: num}),
+    });
+    const data = await r.json();
+    if (!r.ok) { mostrarErro(data.erro || "Erro desconhecido."); return; }
+    esconderLoading();
+    renderizarResultado(data);
+  } catch {
+    mostrarErro("Não foi possível conectar ao servidor. O backend está rodando em localhost:5000?");
+  }
+}
+
+function calcularProgressoFase(nomeFase, emRecurso) {
+  const n = (nomeFase || "").toLowerCase();
+  if (n.includes("encerr") || n.includes("trânsito") || n.includes("transito") || n.includes("julgado")) return 7;
+  if (emRecurso || n.includes("recurso") || n.includes("apel") || n.includes("turma") || n.includes("câmara") || n.includes("camara")) return 6;
+  if (n.includes("senten") || n.includes("decisão") || n.includes("acórdão") || n.includes("acordao")) return 5;
+  if (n.includes("instru") || n.includes("audiência") || n.includes("audiencia") || n.includes("prova")) return 4;
+  if (n.includes("concili")) return 3;
+  if (n.includes("citaç") || n.includes("citac") || n.includes("intim")) return 2;
+  return 1;
+}
+
+function esc(s) {
+  if (s == null) return "";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function semEmoji(s) {
+  if (!s) return "";
+  return String(s).replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{2300}-\u{23FF}]|[\uD800-\uDBFF][\uDC00-\uDFFF]/gu, "").trim();
+}
+function extrairPercentual(texto) {
+  if (!texto) return 0;
+  const m = String(texto).match(/(\d{1,3})\s*%/g);
+  if (!m) return 0;
+  const nums = m.map(x => parseInt(x));
+  return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+}
+function badgeExito(t) {
+  const p = extrairPercentual(t);
+  if (p >= 70) return "badge-success";
+  if (p >= 50) return "badge-warn";
+  if (p > 0)   return "badge-danger";
+  return "badge-neutral";
+}
+function badgeImportancia(imp) {
+  if (imp === "alta") return "badge-info";
+  return "badge-neutral";
+}
+function labelImportancia(imp) {
+  if (imp === "alta")  return "Relevante";
+  if (imp === "media") return "Normal";
+  return "Rotina";
+}
+
+function renderizarResultado(d) {
+  const p    = d.processo;
+  const a    = d.analise;
+  const movs = (a.traducao_movimentos || []).slice(0, 8);
+  const faseIdx      = calcularProgressoFase(a.fase_atual?.nome, a.status_recurso?.em_recurso);
+  const progressFrac = FASES.length > 1 ? Math.max(0, (faseIdx - 1) / (FASES.length - 1)) : 0;
+  const pct          = extrairPercentual(a.analise_juridica?.estimativa_exito);
+  const faseAtual    = FASES[faseIdx - 1] || FASES[0];
+
+  const fasesHtml = FASES.map((f, i) => {
+    const cls        = i + 1 < faseIdx ? "done" : i + 1 === faseIdx ? "current" : "";
+    const dotContent = i + 1 < faseIdx ? "&#10003;" : i + 1;
+    return `<div class="phase-item ${cls}">
+      <div class="phase-dot">${dotContent}</div>
+      <span class="phase-label">${f}</span>
+    </div>`;
+  }).join("");
+
+  const movsHtml = movs.length ? movs.map(m => `
+    <div class="mov-item importancia-${esc(m.importancia)}">
+      <div class="mov-line">
+        <div class="mov-circle"></div>
+        <div class="mov-connector"></div>
+      </div>
+      <div class="mov-content">
+        <div class="mov-header">
+          <span class="mov-date">${esc(m.data)}</span>
+          <span class="badge ${badgeImportancia(m.importancia)}">${labelImportancia(m.importancia)}</span>
+        </div>
+        <div class="mov-translated">${esc(semEmoji(m.traduzido))}</div>
+        <div class="mov-original">${esc(m.original)}</div>
+      </div>
+    </div>`).join("") : "<p style='color:var(--muted);font-size:.9rem'>Sem movimentações disponíveis.</p>";
+
+  const fundamentos = (a.analise_juridica?.fundamentos || []).map(f =>
+    `<li><span class="icon icon-neu">i</span>${esc(semEmoji(f))}</li>`).join("");
+  const positivos = (a.analise_juridica?.fatores_positivos || []).map(f =>
+    `<li><span class="icon icon-pos">+</span>${esc(semEmoji(f))}</li>`).join("");
+  const negativos = (a.analise_juridica?.fatores_negativos || []).map(f =>
+    `<li><span class="icon icon-neg">-</span>${esc(semEmoji(f))}</li>`).join("");
+
+  const passos = (a.proximos_passos || []).map((s, i) =>
+    `<li><span class="step-num">${i+1}</span>${esc(semEmoji(s))}</li>`).join("");
+
+  const alertasHtml = (a.alertas && a.alertas.length) ? `
+    <div class="section rs">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FEF3C7">
+          <svg viewBox="0 0 24 24" style="stroke:var(--warn)"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="section-title" style="color:var(--warn)">Alertas importantes</span>
+      </div>
+      <ul class="alertas-list">
+        ${a.alertas.map(al => `<li><span class="alerta-icon">!</span>${esc(semEmoji(al))}</li>`).join("")}
+      </ul>
+    </div>` : "";
+
+  const html = `
+    <!-- Cabeçalho -->
+    <div class="proc-header rs">
+      <div class="proc-header-top">
+        <span class="proc-num">${esc(p.numero_processo)}</span>
+        <span class="proc-badge-grau">Grau ${esc(p.grau || "-")}</span>
+      </div>
+      <div class="proc-meta">
+        <div class="proc-meta-item"><span>Tribunal</span><strong>${esc(p.tribunal || "-")}</strong></div>
+        <div class="proc-meta-item"><span>Órgão Julgador</span><strong>${esc(p.orgao_julgador || "-")}</strong></div>
+        <div class="proc-meta-item"><span>Classe</span><strong>${esc(p.classe || "-")}</strong></div>
+        <div class="proc-meta-item"><span>Valor da causa</span><strong>${esc(p.valor_causa)}</strong></div>
+        <div class="proc-meta-item"><span>Ajuizado em</span><strong>${esc(p.data_ajuizamento)}</strong></div>
+      </div>
+    </div>
+
+    <!-- Progresso -->
+    <div class="phases-card rs">
+      <div class="phases-header">
+        <span class="phases-title">Progresso do processo</span>
+        <span class="phases-badge">${esc(faseAtual)}</span>
+      </div>
+      <div class="phase-track" style="--prog:${progressFrac}">${fasesHtml}</div>
+    </div>
+
+    <!-- Métricas -->
+    <div class="grid-metrics rs">
+      <div class="metric-card mc-blue">
+        <div class="metric-icon mi-blue">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="metric-label">Tempo decorrido</div>
+        <div class="metric-value">${esc(a.estimativa_prazo?.tempo_decorrido || "-")}</div>
+        <div class="metric-sub">Estimativa restante: ${esc(a.estimativa_prazo?.estimativa_restante || "-")}</div>
+        ${a.estimativa_prazo?.comparativo ? `<div class="metric-sub it">${esc(semEmoji(a.estimativa_prazo.comparativo))}</div>` : ""}
+      </div>
+      <div class="metric-card mc-info">
+        <div class="metric-icon mi-info">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="metric-label">Fase atual</div>
+        <div class="metric-value" style="font-size:1.15rem;margin-top:4px">${esc(semEmoji(a.fase_atual?.nome || "-"))}</div>
+        <div class="metric-sub">${esc(semEmoji(a.fase_atual?.descricao || ""))}</div>
+      </div>
+      <div class="metric-card ${a.status_recurso?.em_recurso ? 'mc-warn' : 'mc-green'}">
+        <div class="metric-icon ${a.status_recurso?.em_recurso ? 'mi-warn' : 'mi-green'}">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="metric-label">Status do recurso</div>
+        <div class="metric-value" style="font-size:1rem;margin-top:6px">
+          <span class="badge ${a.status_recurso?.em_recurso ? 'badge-warn' : 'badge-success'}">
+            ${a.status_recurso?.em_recurso ? "Em recurso" : "Sem recurso ativo"}
+          </span>
+        </div>
+        <div class="metric-sub" style="margin-top:10px">${esc(semEmoji(a.status_recurso?.descricao || ""))}</div>
+      </div>
+      <div class="metric-card ${pct >= 70 ? 'mc-green' : pct >= 50 ? 'mc-warn' : 'mc-blue'}">
+        <div class="metric-icon ${pct >= 70 ? 'mi-green' : pct >= 50 ? 'mi-warn' : 'mi-blue'}">
+          <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <div class="metric-label">Estimativa de êxito</div>
+        <div class="metric-value" style="font-size:1rem;margin-top:6px">
+          <span class="badge ${badgeExito(a.analise_juridica?.estimativa_exito)}">
+            ${esc(semEmoji(a.analise_juridica?.estimativa_exito || "Não estimado"))}
+          </span>
+        </div>
+        <div class="metric-sub" style="margin-top:10px">Valor estimado: ${esc(a.analise_juridica?.valor_estimado || "-")}</div>
+      </div>
+    </div>
+
+    <!-- Movimentações -->
+    <div class="section rs">
+      <div class="section-header">
+        <div class="section-icon" style="background:#EEF2FF">
+          <svg viewBox="0 0 24 24" style="stroke:var(--primary)"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+        <span class="section-title">Movimentações traduzidas</span>
+      </div>
+      <div class="timeline">${movsHtml}</div>
+    </div>
+
+    <!-- Análise jurídica -->
+    <div class="section rs">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--accent-light)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--accent)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <span class="section-title">Análise jurídica</span>
+      </div>
+      ${pct > 0 ? `
+        <div class="exito-wrap">
+          <div class="exito-top">
+            <div>
+              <div class="exito-label">Probabilidade de êxito estimada</div>
+              <div class="exito-pct">${pct}%</div>
+            </div>
+            <div class="exito-text">${esc(semEmoji(a.analise_juridica?.estimativa_exito || ""))}</div>
+          </div>
+          <div class="exito-bar"><div class="exito-bar-fill" style="width:${pct}%"></div></div>
+        </div>` : ""}
+      <div class="analise-grid">
+        <div class="analise-bloco">
+          <div class="analise-bloco-title">Fundamentos jurídicos</div>
+          <ul class="item-list">${fundamentos}</ul>
+        </div>
+        <div class="analise-bloco">
+          <div class="analise-bloco-title">Fatores do caso</div>
+          <ul class="item-list">${positivos}${negativos}</ul>
+        </div>
+      </div>
+      <div class="disclaimer">${esc(a.analise_juridica?.disclaimer || "")}</div>
+    </div>
+
+    <!-- Custos -->
+    <div class="section rs">
+      <div class="section-header">
+        <div class="section-icon" style="background:#F0FDF4">
+          <svg viewBox="0 0 24 24" style="stroke:var(--accent)"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <span class="section-title">Custos processuais</span>
+      </div>
+      <table class="custos-table">
+        <tr><td>1ª instância</td><td>${esc(a.custos?.primeira_instancia || "-")}</td></tr>
+        <tr><td>Recurso</td><td>${esc(a.custos?.se_houver_recurso || "-")}</td></tr>
+        <tr><td>Honorários</td><td>${esc(a.custos?.honorarios || "-")}</td></tr>
+      </table>
+    </div>
+
+    <!-- Próximos passos -->
+    <div class="section rs">
+      <div class="section-header">
+        <div class="section-icon" style="background:#F0F9FF">
+          <svg viewBox="0 0 24 24" style="stroke:var(--info)"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <span class="section-title">Próximos passos esperados</span>
+      </div>
+      <ul class="steps-list">${passos}</ul>
+    </div>
+
+    ${alertasHtml}
+
+    <div class="result-footer rs">
+      <button class="btn-secondary" onclick="novaConsulta()">Nova consulta</button>
+      <p>Dados obtidos da base oficial do CNJ (DataJud). A base pode ter defasagem de horas/dias.<br>
+      Esta análise é informativa e <strong>não substitui a orientação de um advogado</strong>.</p>
+    </div>`;
+
+  const tr = document.getElementById("tela-resultado");
+  tr.innerHTML = html;
+  tr.classList.remove("hidden");
+  document.getElementById("tela-busca").classList.add("hidden");
+  document.getElementById("tela-erro").classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Animações escalonadas
+  const sections = tr.querySelectorAll(".rs");
+  sections.forEach((el, i) => {
+    setTimeout(() => el.classList.add("in"), i * 90);
+  });
+}
+
+function novaConsulta() {
+  document.getElementById("tela-resultado").classList.add("hidden");
+  document.getElementById("tela-busca").classList.remove("hidden");
+  inputNumero.value = "";
+  inputNumero.focus();
+}
+</script>
+</body>
+</html>
