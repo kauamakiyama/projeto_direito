@@ -35,14 +35,11 @@ def _formatar_valor(v):
         return str(v)
 
 
-def _formatar_data_iso(s):
-    if not s:
-        return ""
-    from datetime import datetime
-    try:
-        return datetime.fromisoformat(s.replace("Z", "+00:00")).strftime("%d/%m/%Y")
-    except Exception:
-        return s
+def _formatar_data(s):
+    dt = datajud._parse_data(s)
+    if dt:
+        return dt.strftime("%d/%m/%Y")
+    return str(s) if s else ""
 
 
 def _extrair_json(texto: str):
@@ -137,12 +134,12 @@ def analisar():
 
     resultado = {
         "processo": {
-            "numero_processo": processo.get("numeroProcesso", numero),
+            "numero_processo": datajud.formatar_numero_cnj(processo.get("numeroProcesso", numero)),
             "tribunal": processo.get("tribunal") or processo.get("_tribunal_alias", "").upper(),
             "classe": classe_nome,
             "assuntos": [a.get("nome") if isinstance(a, dict) else a for a in assuntos],
             "valor_causa": _formatar_valor(processo.get("valorCausa")),
-            "data_ajuizamento": _formatar_data_iso(data_ajuizamento),
+            "data_ajuizamento": _formatar_data(data_ajuizamento),
             "orgao_julgador": orgao_nome,
             "grau": grau,
         },

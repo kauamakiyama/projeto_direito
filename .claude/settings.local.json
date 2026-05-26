@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(python test_datajud.py)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\Kauã\\\\Desktop\\\\5 semestre\\\\projeto_direito\\\\jurisview\\\\backend\\\\test_datajud.py\")"
     ]
   }
 }

@@ -25,7 +25,7 @@ def montar_prompt(dados_processo: dict, jurisprudencia: dict, tempo: dict) -> st
         "orgaoJulgador": dados_processo.get("orgaoJulgador"),
         "grau": dados_processo.get("grau"),
         "tribunal": dados_processo.get("tribunal"),
-        "dataAjuizamento": dados_processo.get("dataAjuizamento"),
+        "dataAjuizamento": tempo.get("data_formatada") or dados_processo.get("dataAjuizamento"),
         "valorCausa": dados_processo.get("valorCausa"),
         "movimentos_recentes": dados_processo.get("movimentos", [])[:8],
     }

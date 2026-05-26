@@ -5,13 +5,13 @@ Plataforma que traduz processos do Juizado Especial Cível (JEC) para linguagem 
 ## Como rodar
 
 ```bash
-cd jurisview/backend
+cd decisometro/backend
 pip install -r ../requirements.txt
 # Edite .env e coloque sua ANTHROPIC_API_KEY
 python app.py
 ```
 
-Em outro terminal/explorador, abra `jurisview/frontend/index.html` no navegador
+Em outro terminal/explorador, abra `decisometro/frontend/index.html` no navegador
 (duplo clique funciona — o frontend chama `http://localhost:5000`).
 
 ## Arquitetura
