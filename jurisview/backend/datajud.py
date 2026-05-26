@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 # Chave pública oficial do CNJ — pode ser comitada
 DATAJUD_API_KEY = "APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=="
 BASE_URL = "https://api-publica.datajud.cnj.jus.br/api_publica_{tribunal}/_search"
-TIMEOUT = 10
+TIMEOUT = 30
 
 
 def _parse_data(s) -> datetime | None:
