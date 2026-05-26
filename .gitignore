@@ -116,6 +116,12 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+# SQLite databases (gerados em runtime)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
 # Scrapy stuff:
 .scrapy
 

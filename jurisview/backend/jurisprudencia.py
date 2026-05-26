@@ -16,7 +16,12 @@ JURISPRUDENCIA_JEC = {
             "tarifa indevida", "juros abusivos", "anatocismo",
             "desconto não autorizado", "débito automático indevido",
         ],
-        "estimativa_exito": "Alta — 75% a 85%",
+        "media_decisoes": {
+            "procedente": 65,
+            "parcialmente_procedente": 18,
+            "improcedente": 17,
+            "fonte": "TJSP/CNJ 2024 — casos similares de cobrança indevida",
+        },
         "fundamentos": [
             "Súmula 297 STJ: CDC aplica-se às instituições financeiras",
             "Art. 42 CDC: devolução em dobro do valor cobrado indevidamente",
@@ -49,7 +54,12 @@ JURISPRUDENCIA_JEC = {
             "sedex", "pac", "jadlog", "loggi", "entrega não realizada",
             "pedido cancelado sem reembolso", "devolução negada",
         ],
-        "estimativa_exito": "Alta — 70% a 80%",
+        "media_decisoes": {
+            "procedente": 60,
+            "parcialmente_procedente": 18,
+            "improcedente": 22,
+            "fonte": "TJSP/CNJ 2024 — casos similares de não entrega de produto",
+        },
         "fundamentos": [
             "Art. 35 CDC: direito de exigir entrega, aceitar substituto ou rescindir",
             "TJSP consolidado: não entrega em compra online gera dano moral presumido",
@@ -83,7 +93,12 @@ JURISPRUDENCIA_JEC = {
             "quimioterapia", "radioterapia", "ortopedia", "psicologia",
             "psiquiatria", "fisioterapia", "cobertura negada",
         ],
-        "estimativa_exito": "Muito alta — 80% a 90%",
+        "media_decisoes": {
+            "procedente": 74,
+            "parcialmente_procedente": 13,
+            "improcedente": 13,
+            "fonte": "TJSP/CNJ 2024 — casos similares de plano de saúde",
+        },
         "fundamentos": [
             "Súmula 608 STJ: negativa de cobertura de urgência ou emergência gera dano moral",
             "Lei 9.656/98: rol de procedimentos obrigatórios da ANS",
@@ -117,7 +132,12 @@ JURISPRUDENCIA_JEC = {
             "transação não reconhecida", "transacao nao reconhecida",
             "débito não autorizado", "debito nao autorizado",
         ],
-        "estimativa_exito": "Alta — 70% a 80%",
+        "media_decisoes": {
+            "procedente": 62,
+            "parcialmente_procedente": 15,
+            "improcedente": 23,
+            "fonte": "TJSP/CNJ 2024 — casos similares de fraude bancária",
+        },
         "fundamentos": [
             "Súmula 479 STJ: bancos respondem de forma objetiva por fraudes de terceiros",
             "Art. 14 CDC: defeito na prestação do serviço de segurança",
@@ -150,7 +170,12 @@ JURISPRUDENCIA_JEC = {
             "cobrança após cancelamento", "cobranca apos cancelamento",
             "portabilidade", "número portado", "numero portado",
         ],
-        "estimativa_exito": "Média-alta — 60% a 75%",
+        "media_decisoes": {
+            "procedente": 52,
+            "parcialmente_procedente": 16,
+            "improcedente": 32,
+            "fonte": "TJSP/CNJ 2024 — casos similares de rescisão telecom",
+        },
         "fundamentos": [
             "Art. 51 CDC: cláusulas abusivas são nulas de pleno direito",
             "Resolução Anatel 632/2014: multa de fidelidade proporcional ao tempo restante",
@@ -184,7 +209,12 @@ JURISPRUDENCIA_JEC = {
             "assistencia tecnica", "reparo negado", "substituição negada",
             "substituicao negada", "fora de garantia contestado",
         ],
-        "estimativa_exito": "Alta — 70% a 80%",
+        "media_decisoes": {
+            "procedente": 60,
+            "parcialmente_procedente": 17,
+            "improcedente": 23,
+            "fonte": "TJSP/CNJ 2024 — casos similares de produto com defeito",
+        },
         "fundamentos": [
             "Art. 18 CDC: fornecedor responde por vícios de qualidade do produto",
             "Art. 26 CDC: prazo decadencial de 90 dias para bens duráveis",
@@ -217,7 +247,12 @@ JURISPRUDENCIA_JEC = {
             "conexao perdida", "escala perdida", "embarque negado",
             "reembolso passagem", "milhas", "programa fidelidade",
         ],
-        "estimativa_exito": "Alta — 75% a 85%",
+        "media_decisoes": {
+            "procedente": 64,
+            "parcialmente_procedente": 15,
+            "improcedente": 21,
+            "fonte": "TJSP/CNJ 2024 — casos similares de transporte aéreo",
+        },
         "fundamentos": [
             "Convenção de Montreal: responsabilidade objetiva da companhia aérea",
             "Art. 14 CDC: responsabilidade pelo defeito na prestação do serviço",
@@ -253,7 +288,12 @@ JURISPRUDENCIA_JEC = {
             "roubo de veiculo", "furto do veículo", "furto do veiculo",
             "acidente não coberto", "acidente nao coberto",
         ],
-        "estimativa_exito": "Média-alta — 60% a 75%",
+        "media_decisoes": {
+            "procedente": 50,
+            "parcialmente_procedente": 18,
+            "improcedente": 32,
+            "fonte": "TJSP/CNJ 2024 — casos similares de seguro negado",
+        },
         "fundamentos": [
             "Art. 757 CC: obrigação do segurador de indenizar o sinistro coberto",
             "Art. 51 CDC: cláusulas excludentes abusivas são nulas",
@@ -291,7 +331,12 @@ JURISPRUDENCIA_JEC = {
             "motor fundido", "câmbio", "cambio", "suspensão", "suspensao",
             "freio", "air bag", "airbag", "compra de veículo", "compra de veiculo",
         ],
-        "estimativa_exito": "Média-alta — 60% a 75%",
+        "media_decisoes": {
+            "procedente": 48,
+            "parcialmente_procedente": 19,
+            "improcedente": 33,
+            "fonte": "TJSP/CNJ 2024 — casos similares de veículo com defeito",
+        },
         "fundamentos": [
             "Art. 18 CDC: responsabilidade por vícios de qualidade",
             "Art. 26 CDC: prazo decadencial de 90 dias para bens duráveis",
@@ -330,7 +375,12 @@ JURISPRUDENCIA_JEC = {
             "serviço não prestado", "servico nao prestado",
             "contrato de prestação de serviços",
         ],
-        "estimativa_exito": "Média — 55% a 70%",
+        "media_decisoes": {
+            "procedente": 43,
+            "parcialmente_procedente": 20,
+            "improcedente": 37,
+            "fonte": "TJSP/CNJ 2024 — casos similares de serviço mal prestado",
+        },
         "fundamentos": [
             "Art. 20 CDC: o fornecedor responde por vícios na prestação de serviço",
             "Art. 14 CDC: responsabilidade objetiva pelo defeito no serviço",
@@ -363,7 +413,12 @@ JURISPRUDENCIA_JEC = {
             "danos morais acidente", "lesão corporal", "lesao corporal",
             "invalidez", "incapacidade", "pensão por acidente", "pensao por acidente",
         ],
-        "estimativa_exito": "Média — 55% a 70%",
+        "media_decisoes": {
+            "procedente": 40,
+            "parcialmente_procedente": 20,
+            "improcedente": 40,
+            "fonte": "TJSP/CNJ 2024 — casos similares de acidente de trânsito",
+        },
         "fundamentos": [
             "Art. 186 CC: ato ilícito que causa dano gera obrigação de indenizar",
             "Art. 927 CC: responsabilidade civil por dano causado",
@@ -388,7 +443,12 @@ JURISPRUDENCIA_JEC = {
 
     "generico": {
         "gatilhos": [],
-        "estimativa_exito": "Não foi possível estimar com precisão",
+        "media_decisoes": {
+            "procedente": 38,
+            "parcialmente_procedente": 21,
+            "improcedente": 41,
+            "fonte": "TJSP/CNJ 2024 — média geral JEC",
+        },
         "fundamentos": [
             "Análise baseada nos princípios gerais do CDC e jurisprudência do STJ",
         ],

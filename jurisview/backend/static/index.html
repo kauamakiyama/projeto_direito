@@ -578,25 +578,35 @@
       line-height: 1.4;
     }
 
-    /* ── ANÁLISE ÊXITO ── */
-    .exito-wrap {
+    /* ── MÉDIA DE DECISÕES ── */
+    .decisoes-wrap {
       background: linear-gradient(135deg, var(--primary) 0%, #163558 100%);
       border-radius: var(--radius-sm);
       padding: 24px 28px;
       margin-bottom: 22px;
       color: white;
     }
-    .exito-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-    .exito-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; opacity: .55; margin-bottom: 4px; }
-    .exito-pct { font-size: 2.4rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
-    .exito-text { font-size: .88rem; opacity: .75; text-align: right; max-width: 200px; line-height: 1.4; }
-    .exito-bar { height: 7px; background: rgba(255,255,255,.18); border-radius: 999px; overflow: hidden; }
-    .exito-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #4ADE80, #86EFAC);
-      border-radius: 999px;
-      transition: width 1s cubic-bezier(.4,0,.2,1);
-    }
+    .decisoes-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .decisoes-titulo { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; opacity: .55; }
+    .polo-toggle { display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,.1); border-radius: 999px; padding: 3px; }
+    .polo-toggle-label { font-size: .68rem; opacity: .5; padding: 0 6px 0 2px; }
+    .polo-btn { border: none; background: transparent; color: white; font-size: .72rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; cursor: pointer; opacity: .55; transition: all .2s; }
+    .polo-btn.polo-ativo { background: rgba(255,255,255,.2); opacity: 1; }
+    .polo-btn:hover:not(.polo-ativo) { opacity: .8; }
+    .decisoes-stats { display: flex; gap: 0; margin-bottom: 14px; }
+    .decisoes-stat { flex: 1; text-align: center; }
+    .decisoes-stat:not(:last-child) { border-right: 1px solid rgba(255,255,255,.12); }
+    .decisoes-pct { display: block; font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; margin-bottom: 4px; }
+    .decisoes-pct.proc  { color: #4ADE80; }
+    .decisoes-pct.parc  { color: #FCD34D; }
+    .decisoes-pct.impro { color: #F87171; }
+    .decisoes-label { font-size: .71rem; opacity: .65; line-height: 1.3; }
+    .decisoes-sub { font-size: .62rem; opacity: .7; display: block; margin-top: 3px; font-style: italic; }
+    .decisoes-bar { display: flex; height: 7px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.1); margin-bottom: 14px; }
+    .decisoes-bar-proc  { background: #4ADE80; transition: width 1s cubic-bezier(.4,0,.2,1); }
+    .decisoes-bar-parc  { background: #FCD34D; transition: width 1s cubic-bezier(.4,0,.2,1) .1s; }
+    .decisoes-bar-impro { background: #F87171; flex: 1; transition: width 1s cubic-bezier(.4,0,.2,1) .2s; }
+    .decisoes-contexto  { font-size: .83rem; opacity: .7; line-height: 1.5; font-style: italic; }
 
     .analise-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
     @media (max-width: 580px) { .analise-grid { grid-template-columns: 1fr; } }
@@ -642,6 +652,49 @@
     .alertas-list li { display: flex; gap: 12px; align-items: flex-start; font-size: .87rem; color: #7C2D12; line-height: 1.5; background: #FFF7ED; border-radius: var(--radius-sm); padding: 14px 16px; border: 1px solid #FED7AA; }
     .alerta-icon { width: 20px; height: 20px; border-radius: 50%; background: var(--warn-light); color: var(--warn); font-size: .65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
+    /* ── MONITOR DE ALERTAS ── */
+    .monitor-box {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%);
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius-sm);
+      padding: 20px 22px;
+    }
+    .monitor-icon-wrap {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #DBEAFE; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .monitor-icon-wrap svg { width: 20px; height: 20px; stroke: #2563EB; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .monitor-body { flex: 1; min-width: 0; }
+    .monitor-title { font-size: .88rem; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
+    .monitor-desc  { font-size: .8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.45; }
+    .monitor-form  { display: flex; gap: 8px; flex-wrap: wrap; }
+    .monitor-input {
+      flex: 1; min-width: 180px;
+      border: 1px solid #93C5FD; border-radius: var(--radius-sm);
+      padding: 9px 14px; font-size: .85rem;
+      background: white; color: var(--text); outline: none;
+      transition: border-color .2s;
+    }
+    .monitor-input:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .monitor-btn {
+      background: #1D4ED8; color: white; border: none;
+      border-radius: var(--radius-sm); padding: 9px 18px;
+      font-size: .82rem; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: background .2s;
+    }
+    .monitor-btn:hover  { background: #1E40AF; }
+    .monitor-btn:disabled { opacity: .6; cursor: default; }
+    .monitor-status { font-size: .82rem; padding: 8px 14px; border-radius: var(--radius-sm); }
+    .monitor-status.ok  { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .monitor-status.err { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+    @media (max-width: 520px) {
+      .monitor-box { flex-direction: column; }
+      .monitor-form { flex-direction: column; }
+      .monitor-input, .monitor-btn { width: 100%; }
+    }
+
     /* ── RODAPÉ ── */
     .result-footer { text-align: center; padding: 12px 0; }
     .result-footer p { margin-top: 16px; font-size: .8rem; color: var(--muted); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
@@ -678,9 +731,9 @@
       .metric-card { padding: 18px; }
       .metric-value { font-size: 1.3rem; }
 
-      .exito-wrap { padding: 18px; }
-      .exito-pct { font-size: 1.8rem; }
-      .exito-text { display: none; }
+      .decisoes-wrap { padding: 18px; }
+      .decisoes-pct { font-size: 1.5rem; }
+      .decisoes-stats { gap: 0; }
 
       .analise-grid { grid-template-columns: 1fr; }
 
@@ -826,19 +879,121 @@ function semEmoji(s) {
   if (!s) return "";
   return String(s).replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{2300}-\u{23FF}]|[\uD800-\uDBFF][\uDC00-\uDFFF]/gu, "").trim();
 }
-function extrairPercentual(texto) {
-  if (!texto) return 0;
-  const m = String(texto).match(/(\d{1,3})\s*%/g);
-  if (!m) return 0;
-  const nums = m.map(x => parseInt(x));
-  return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+let _mediaDecisoes    = null;
+let _poloAtual        = 'autor';
+let _numeroProcesso   = '';
+let _movimentosBrutos = [];
+
+async function assinarAlertas() {
+  const input  = document.getElementById('monitor-email-input');
+  const btn    = document.getElementById('monitor-btn');
+  const status = document.getElementById('monitor-status');
+  const email  = (input?.value || '').trim();
+
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    status.textContent = 'Informe um email válido.';
+    status.className   = 'monitor-status err';
+    status.style.display = 'block';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Ativando...';
+  status.style.display = 'none';
+
+  try {
+    const resp = await fetch('/api/monitorar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        numero_processo: _numeroProcesso,
+        email,
+        movimentos: _movimentosBrutos,
+      }),
+    });
+    const data = await resp.json();
+    if (data.sucesso) {
+      document.getElementById('monitor-form-wrap').style.display = 'none';
+      status.textContent    = data.mensagem;
+      status.className      = 'monitor-status ok';
+      status.style.display  = 'block';
+    } else {
+      throw new Error(data.erro || 'Erro desconhecido.');
+    }
+  } catch (e) {
+    status.textContent   = e.message;
+    status.className     = 'monitor-status err';
+    status.style.display = 'block';
+    btn.disabled    = false;
+    btn.textContent = 'Ativar alertas';
+  }
 }
-function badgeExito(t) {
-  const p = extrairPercentual(t);
-  if (p >= 70) return "badge-success";
-  if (p >= 50) return "badge-warn";
-  if (p > 0)   return "badge-danger";
+
+function badgeDecisoes(pctProc, polo) {
+  const pct = polo === 'reu' ? (100 - pctProc) : pctProc;
+  if (pct >= 60) return "badge-success";
+  if (pct >= 45) return "badge-warn";
+  if (pct > 0)   return "badge-danger";
   return "badge-neutral";
+}
+
+function setPolo(polo) {
+  _poloAtual = polo;
+  if (!_mediaDecisoes) return;
+  const wrap = document.querySelector('.decisoes-wrap');
+  if (wrap) wrap.innerHTML = renderDecisoesFrag(_mediaDecisoes, polo);
+}
+
+function renderDecisoesFrag(md, polo) {
+  const pctProc = md.procedente || 0;
+  const pctParc = md.parcialmente_procedente || 0;
+  const pctImpro = md.improcedente || 0;
+  const isReu = polo === 'reu';
+
+  // Para réu: procedente é ruim (vermelho), improcedente é bom (verde) — inverte as classes
+  const clsProc  = isReu ? 'impro' : 'proc';
+  const clsImpro = isReu ? 'proc'  : 'impro';
+  const barProc  = isReu ? 'decisoes-bar-impro' : 'decisoes-bar-proc';
+  const barImpro = isReu ? 'decisoes-bar-proc'  : 'decisoes-bar-impro';
+
+  const subProc  = isReu ? 'risco para você'    : 'favorável para você';
+  const subImpro = isReu ? 'favorável para você' : 'desfavorável para você';
+
+  let contexto = esc(semEmoji(md.contexto || ''));
+  if (isReu && pctImpro > 0) {
+    contexto = `Como réu, ${pctImpro}% dos casos similares resultam em improcedência — o pedido é negado, o que é favorável para você. Atenção: ${pctProc}% resultam em procedência total.`;
+  }
+
+  return `
+    <div class="decisoes-header">
+      <div class="decisoes-titulo">Média de decisões em casos similares</div>
+      <div class="polo-toggle">
+        <span class="polo-toggle-label">Você é:</span>
+        <button class="polo-btn ${!isReu ? 'polo-ativo' : ''}" onclick="setPolo('autor')">Autor</button>
+        <button class="polo-btn ${isReu  ? 'polo-ativo' : ''}" onclick="setPolo('reu')">Réu</button>
+      </div>
+    </div>
+    <div class="decisoes-stats">
+      <div class="decisoes-stat">
+        <span class="decisoes-pct ${clsProc}">${pctProc}%</span>
+        <span class="decisoes-label">Procedente<span class="decisoes-sub">${subProc}</span></span>
+      </div>
+      <div class="decisoes-stat">
+        <span class="decisoes-pct parc">${pctParc}%</span>
+        <span class="decisoes-label">Parcialmente procedente<span class="decisoes-sub">resultado parcial</span></span>
+      </div>
+      <div class="decisoes-stat">
+        <span class="decisoes-pct ${clsImpro}">${pctImpro}%</span>
+        <span class="decisoes-label">Improcedente<span class="decisoes-sub">${subImpro}</span></span>
+      </div>
+    </div>
+    <div class="decisoes-bar">
+      <div class="${barProc}"  style="width:${pctProc}%"></div>
+      <div class="decisoes-bar-parc" style="width:${pctParc}%"></div>
+      <div class="${barImpro}" style="width:${pctImpro}%"></div>
+    </div>
+    ${contexto ? `<div class="decisoes-contexto">${contexto}</div>` : ''}
+  `;
 }
 function badgeImportancia(imp) {
   if (imp === "alta") return "badge-info";
@@ -856,8 +1011,15 @@ function renderizarResultado(d) {
   const movs = (a.traducao_movimentos || []).slice(0, 8);
   const faseIdx      = calcularProgressoFase(a.fase_atual?.nome, a.status_recurso?.em_recurso);
   const progressFrac = FASES.length > 1 ? Math.max(0, (faseIdx - 1) / (FASES.length - 1)) : 0;
-  const pct          = extrairPercentual(a.analise_juridica?.estimativa_exito);
-  const faseAtual    = FASES[faseIdx - 1] || FASES[0];
+  _mediaDecisoes     = a.analise_juridica?.media_decisoes || {};
+  _poloAtual         = 'autor';
+  _numeroProcesso    = p.numero_processo || '';
+  _movimentosBrutos  = d.movimentos_brutos || [];
+  const mediaDecisoes   = _mediaDecisoes;
+  const pctProc         = mediaDecisoes.procedente || 0;
+  const pctParc         = mediaDecisoes.parcialmente_procedente || 0;
+  const pctImpro        = mediaDecisoes.improcedente || 0;
+  const faseAtual       = FASES[faseIdx - 1] || FASES[0];
 
   const fasesHtml = FASES.map((f, i) => {
     const cls        = i + 1 < faseIdx ? "done" : i + 1 === faseIdx ? "current" : "";
@@ -923,6 +1085,22 @@ function renderizarResultado(d) {
       </div>
     </div>
 
+    <!-- Alertas de atualização -->
+    <div class="monitor-box rs">
+      <div class="monitor-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="monitor-body">
+        <div class="monitor-title">Receber alertas de atualização</div>
+        <div class="monitor-desc">Avisamos por email quando houver novas movimentações neste processo.</div>
+        <div id="monitor-form-wrap" class="monitor-form">
+          <input id="monitor-email-input" type="email" class="monitor-input" placeholder="seu@email.com">
+          <button id="monitor-btn" class="monitor-btn" onclick="assinarAlertas()">Ativar alertas</button>
+        </div>
+        <div id="monitor-status" class="monitor-status" style="display:none"></div>
+      </div>
+    </div>
+
     <!-- Progresso -->
     <div class="phases-card rs">
       <div class="phases-header">
@@ -963,17 +1141,17 @@ function renderizarResultado(d) {
         </div>
         <div class="metric-sub" style="margin-top:10px">${esc(semEmoji(a.status_recurso?.descricao || ""))}</div>
       </div>
-      <div class="metric-card ${pct >= 70 ? 'mc-green' : pct >= 50 ? 'mc-warn' : 'mc-blue'}">
-        <div class="metric-icon ${pct >= 70 ? 'mi-green' : pct >= 50 ? 'mi-warn' : 'mi-blue'}">
+      <div class="metric-card ${pctProc >= 60 ? 'mc-green' : pctProc >= 45 ? 'mc-warn' : 'mc-blue'}">
+        <div class="metric-icon ${pctProc >= 60 ? 'mi-green' : pctProc >= 45 ? 'mi-warn' : 'mi-blue'}">
           <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
         </div>
-        <div class="metric-label">Estimativa de êxito</div>
+        <div class="metric-label">Casos similares</div>
         <div class="metric-value" style="font-size:1rem;margin-top:6px">
-          <span class="badge ${badgeExito(a.analise_juridica?.estimativa_exito)}">
-            ${esc(semEmoji(a.analise_juridica?.estimativa_exito || "Não estimado"))}
+          <span class="badge ${badgeDecisoes(pctProc)}">
+            ${pctProc > 0 ? pctProc + '% procedente' : 'Não estimado'}
           </span>
         </div>
-        <div class="metric-sub" style="margin-top:10px">Valor estimado: ${esc(a.analise_juridica?.valor_estimado || "-")}</div>
+        <div class="metric-sub" style="margin-top:10px">${pctParc > 0 ? pctParc + '% parcial · ' + pctImpro + '% improcedente' : ''}</div>
       </div>
     </div>
 
@@ -996,17 +1174,7 @@ function renderizarResultado(d) {
         </div>
         <span class="section-title">Análise jurídica</span>
       </div>
-      ${pct > 0 ? `
-        <div class="exito-wrap">
-          <div class="exito-top">
-            <div>
-              <div class="exito-label">Probabilidade de êxito estimada</div>
-              <div class="exito-pct">${pct}%</div>
-            </div>
-            <div class="exito-text">${esc(semEmoji(a.analise_juridica?.estimativa_exito || ""))}</div>
-          </div>
-          <div class="exito-bar"><div class="exito-bar-fill" style="width:${pct}%"></div></div>
-        </div>` : ""}
+      ${pctProc > 0 ? `<div class="decisoes-wrap">${renderDecisoesFrag(mediaDecisoes, 'autor')}</div>` : ""}
       <div class="analise-grid">
         <div class="analise-bloco">
           <div class="analise-bloco-title">Fundamentos jurídicos</div>

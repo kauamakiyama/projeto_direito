@@ -5,7 +5,7 @@ Construção do prompt enviado ao Claude para análise do processo.
 import json
 
 DISCLAIMER = (
-    "Esta estimativa é baseada em jurisprudência consolidada de casos similares. "
+    "Estes percentuais refletem a média histórica de decisões em casos similares no JEC. "
     "Cada caso tem particularidades que podem alterar este resultado. "
     "Esta análise não substitui a orientação de um advogado."
 )
@@ -41,7 +41,8 @@ REGRAS CRÍTICAS:
 - Tempo médio do JEC estadual: 14 meses (fonte: CNJ Justiça em Números 2024).
 - Taxa de conciliação JEC estadual: 21% (fonte: CNJ 2024).
 - Se o campo "grau" for "G2", o processo está em recurso na Turma Recursal — mencione isso.
-- No disclaimer da estimativa de êxito, inclua exatamente: "{DISCLAIMER}"
+- No disclaimer da média de decisões, inclua exatamente: "{DISCLAIMER}"
+- Para o campo media_decisoes, use os valores do campo "media_decisoes" da jurisprudência mapeada abaixo. Preencha "contexto" com uma frase simples explicando o que esses números significam para o cidadão.
 
 DADOS DO PROCESSO (CNJ/DataJud):
 {json.dumps(resumo, ensure_ascii=False, indent=2, default=str)}
@@ -80,7 +81,12 @@ Responda EXCLUSIVAMENTE com um JSON válido (sem markdown, sem texto antes ou de
     "comparativo": "seu processo está dentro/acima/abaixo da média"
   }},
   "analise_juridica": {{
-    "estimativa_exito": "Alta/Média/Baixa — XX% a XX%",
+    "media_decisoes": {{
+      "procedente": 0,
+      "parcialmente_procedente": 0,
+      "improcedente": 0,
+      "contexto": "breve explicação em linguagem simples sobre o que esses percentuais significam para o caso"
+    }},
     "fundamentos": ["fundamento 1", "fundamento 2"],
     "fatores_positivos": ["fator que fortalece o caso"],
     "fatores_negativos": ["fator que pode enfraquecer"],

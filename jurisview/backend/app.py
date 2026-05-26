@@ -14,11 +14,15 @@ from anthropic import Anthropic
 import datajud
 import jurisprudencia
 import prompts
+import monitor
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+monitor.init_db()
+_scheduler = monitor.iniciar_scheduler()
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 client = Anthropic(
@@ -156,6 +160,45 @@ def analisar():
         "fonte": "DataJud CNJ + jurisprudência consolidada",
     }
     return jsonify(resultado)
+
+
+@app.route("/api/monitorar", methods=["POST"])
+def monitorar():
+    body = request.get_json(silent=True) or {}
+    numero    = (body.get("numero_processo") or "").strip()
+    email     = (body.get("email") or "").strip()
+    movimentos = body.get("movimentos", [])
+
+    if not numero or not email:
+        return jsonify({"erro": "Número do processo e email são obrigatórios."}), 400
+
+    import re as _re
+    if not _re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+        return jsonify({"erro": "Email inválido."}), 400
+
+    ok = monitor.adicionar_inscricao(numero, email, movimentos)
+    if ok:
+        return jsonify({
+            "sucesso": True,
+            "mensagem": f"Alertas ativados! Você será notificado em {email} quando houver novas movimentações.",
+        })
+    return jsonify({"erro": "Erro interno ao ativar alertas."}), 500
+
+
+@app.route("/cancelar")
+def cancelar_notificacao():
+    numero = request.args.get("processo", "").strip()
+    email  = request.args.get("email", "").strip()
+    if not numero or not email:
+        return "Link inválido.", 400
+    monitor.remover_inscricao(numero, email)
+    return f"""<html><head><meta charset="utf-8">
+    <style>body{{font-family:-apple-system,sans-serif;text-align:center;padding:60px;color:#1e293b}}</style>
+    </head><body>
+      <h2>Alertas cancelados</h2>
+      <p>Você não receberá mais notificações do processo <strong>{numero}</strong>.</p>
+      <a href="/">Voltar ao início</a>
+    </body></html>"""
 
 
 if __name__ == "__main__":
