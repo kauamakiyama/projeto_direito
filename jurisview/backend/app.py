@@ -21,7 +21,11 @@ app = Flask(__name__)
 CORS(app)
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
+client = Anthropic(
+    api_key=ANTHROPIC_API_KEY,
+    timeout=120.0,
+    max_retries=2,
+) if ANTHROPIC_API_KEY else None
 
 MODELO_CLAUDE = "claude-sonnet-4-5"
 
@@ -120,7 +124,6 @@ def analisar():
         resposta = client.messages.create(
             model=MODELO_CLAUDE,
             max_tokens=2048,
-            timeout=90,
             messages=[{"role": "user", "content": prompt_texto}],
         )
         conteudo = resposta.content[0].text
@@ -128,7 +131,7 @@ def analisar():
     except json.JSONDecodeError as e:
         return jsonify({"erro": f"Resposta da IA fora do formato esperado: {e}"}), 503
     except Exception as e:
-        return jsonify({"erro": f"Falha na análise da IA: {e}"}), 503
+        return jsonify({"erro": f"Falha na análise da IA: {type(e).__name__}: {e}"}), 503
 
     # 6) Monta resposta final com dados brutos + análise
     classe = processo.get("classe", {})
